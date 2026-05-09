@@ -1,166 +1,395 @@
 # RFID Tool Tracking System
 
-A full-stack RFID Tool Tracking system built with React + TypeScript (frontend) and Node.js + Express + TypeScript (backend), using PostgreSQL for data storage and JWT for authentication.
+A full-stack RFID Tool Tracking System built using React + TypeScript for the frontend and Node.js + Express + TypeScript for the backend, with PostgreSQL as the database and JWT-based authentication.
 
-## Features
+---
 
-- **Tool Master**: Full CRUD for tool inventory (Tool ID, Name, Category, Status)
-- **Issue / Return Flow**: Issue tools to users, return them, with full validation
-- **RFID Inventory Scan**: Simulate RFID scanning — detects missing, extra, and correct tools
-- **Dashboard**: Live stats — total, available, issued, and missing tools
-- **JWT Authentication**: Secure API with Bearer token authentication
+# Live Demo
 
-## Tech Stack
+https://tool-tracker-1-lee1.onrender.com
 
-- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui
-- **Backend**: Node.js + Express 5 + TypeScript
-- **Database**: PostgreSQL + Drizzle ORM
-- **Auth**: JWT (jsonwebtoken) + bcryptjs
-- **API Contracts**: OpenAPI 3.1 + Orval codegen (React Query hooks + Zod schemas)
-- **Package Manager**: pnpm workspaces (monorepo)
+# GitHub Repository
 
-## API Endpoints
+https://github.com/Ankitshukla63/tool_tracker
 
-All endpoints (except `/api/auth/*` and `/api/healthz`) require `Authorization: Bearer <token>` header.
+---
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/healthz` | Health check |
-| POST | `/api/auth/register` | Register a user |
-| POST | `/api/auth/login` | Login, get JWT token |
-| GET | `/api/tools` | List all tools (filter by status/category) |
-| POST | `/api/tools` | Create a tool |
-| GET | `/api/tools/:id` | Get tool by ID |
-| PUT | `/api/tools/:id` | Update a tool |
-| DELETE | `/api/tools/:id` | Delete a tool |
-| POST | `/api/issue` | Issue a tool to a user |
-| POST | `/api/return` | Return a tool |
-| POST | `/api/scan` | RFID inventory scan |
-| GET | `/api/stats` | Dashboard statistics |
-| GET | `/api/transactions` | Recent transaction log |
+# Project Overview
 
-## Test Cases
+The RFID Tool Tracking System is designed to manage industrial tools using RFID-based inventory tracking concepts. The system allows organizations to maintain tool inventory, issue and return tools, track transactions, and simulate RFID inventory scans to detect missing or extra tools.
 
-- **Issue same tool twice** → Returns 400: "Tool is not available (current status: issued)"
-- **Return non-issued tool** → Returns 400: "Tool is not currently issued (current status: available)"
-- **Scan with missing tools** → `missing` array contains tools in DB but not scanned
-- **Scan with extra tools** → `extra` array contains scanned IDs not in DB
+The project includes:
 
-## Database Schema
+* Full authentication system
+* Tool inventory management
+* RFID scan simulation
+* Dashboard analytics
+* Transaction history
+* PostgreSQL database integration
+* RESTful APIs
+
+---
+
+# Features
+
+## Authentication
+
+* User Registration
+* User Login
+* JWT Token Authentication
+* Protected APIs
+
+## Tool Management
+
+* Add Tools
+* Update Tools
+* Delete Tools
+* View Tool Inventory
+* Tool Status Tracking
+
+## Tool Issue / Return
+
+* Issue tools to users/employees
+* Return issued tools
+* Validation for invalid operations
+
+## RFID Scan Simulation
+
+* Detect Missing Tools
+* Detect Extra Tools
+* Match scanned tools with database inventory
+
+## Dashboard
+
+* Total Tools
+* Available Tools
+* Issued Tools
+* Missing Tools
+* Recent Transactions
+
+---
+
+# Tech Stack
+
+## Frontend
+
+* React 19
+* TypeScript
+* Vite
+* Tailwind CSS
+* shadcn/ui
+
+## Backend
+
+* Node.js
+* Express.js 5
+* TypeScript
+
+## Database
+
+* PostgreSQL
+* Drizzle ORM
+
+## Authentication & Security
+
+* JWT (jsonwebtoken)
+* bcryptjs
+
+## API & Tooling
+
+* OpenAPI 3.1
+* Orval Codegen
+* React Query
+* pnpm Workspaces
+
+---
+
+# Architecture
+
+```text
+Frontend (React + Vite)
+        ↓
+REST API (Express.js)
+        ↓
+PostgreSQL Database
+```
+
+---
+
+# API Endpoints
+
+| Method | Endpoint             | Description          |
+| ------ | -------------------- | -------------------- |
+| GET    | `/api/healthz`       | Health Check         |
+| POST   | `/api/auth/register` | Register User        |
+| POST   | `/api/auth/login`    | Login User           |
+| GET    | `/api/tools`         | Get All Tools        |
+| POST   | `/api/tools`         | Create Tool          |
+| GET    | `/api/tools/:id`     | Get Tool By ID       |
+| PUT    | `/api/tools/:id`     | Update Tool          |
+| DELETE | `/api/tools/:id`     | Delete Tool          |
+| POST   | `/api/issue`         | Issue Tool           |
+| POST   | `/api/return`        | Return Tool          |
+| POST   | `/api/scan`          | RFID Inventory Scan  |
+| GET    | `/api/stats`         | Dashboard Statistics |
+| GET    | `/api/transactions`  | Transaction Logs     |
+
+---
+
+# Database Schema
+
+## Users Table
 
 ```sql
--- Users table
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW()
 );
+```
 
--- Tools table
+## Tools Table
+
+```sql
 CREATE TABLE tools (
   id SERIAL PRIMARY KEY,
   tool_id TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
   category TEXT NOT NULL,
-  status tool_status NOT NULL DEFAULT 'available', -- available | issued | missing
+  status tool_status NOT NULL DEFAULT 'available',
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+```
 
--- Transactions table
+## Transactions Table
+
+```sql
 CREATE TABLE transactions (
   id SERIAL PRIMARY KEY,
   tool_id TEXT NOT NULL,
   user_id TEXT,
-  action transaction_action NOT NULL, -- issue | return | scan
+  action transaction_action NOT NULL,
   notes TEXT,
   created_at TIMESTAMP DEFAULT NOW()
 );
 ```
 
-## Local Development
+---
 
-### Prerequisites
-- Node.js 20+
-- pnpm 9+
-- PostgreSQL database
-
-### Setup
+# Project Structure
 
 ```bash
-# Install dependencies
+tool_tracker/
+│
+├── apps/
+│   ├── api-server/
+│   │   ├── src/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   └── package.json
+│   │
+│   └── rfid-frontend/
+│       ├── src/
+│       ├── components/
+│       ├── pages/
+│       └── package.json
+│
+├── packages/
+│   ├── db/
+│   ├── api-spec/
+│   └── shared/
+│
+├── railway.json
+├── pnpm-workspace.yaml
+├── package.json
+└── README.md
+```
+
+---
+
+# Local Development Setup
+
+## Prerequisites
+
+* Node.js 20+
+* pnpm 9+
+* PostgreSQL
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Ankitshukla63/tool_tracker.git
+cd tool_tracker
+```
+
+## Install Dependencies
+
+```bash
 pnpm install
+```
 
-# Set environment variables
-cp .env.example .env
-# Edit .env with your DATABASE_URL and JWT_SECRET
+---
 
-# Push database schema
+# Environment Variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=your_postgresql_connection_string
+JWT_SECRET=your_secret_key
+NODE_ENV=development
+```
+
+---
+
+# Database Setup
+
+```bash
 pnpm --filter @workspace/db run push
+```
 
-# Start the API server (development)
+---
+
+# Start Backend Server
+
+```bash
 pnpm --filter @workspace/api-server run dev
+```
 
-# Start the frontend (development)
+---
+
+# Start Frontend
+
+```bash
 pnpm --filter @workspace/rfid-frontend run dev
 ```
 
-### Codegen (after OpenAPI spec changes)
+---
 
-```bash
-pnpm --filter @workspace/api-spec run codegen
+# Deployment (Render)
+
+## Steps
+
+1. Push project to GitHub
+2. Create a new Web Service on Render
+3. Connect GitHub Repository
+4. Add PostgreSQL Database
+5. Configure Environment Variables:
+
+   * DATABASE_URL
+   * JWT_SECRET
+   * NODE_ENV=production
+6. Deploy Application
+
+---
+
+# Environment Variables
+
+| Variable     | Required | Description             |
+| ------------ | -------- | ----------------------- |
+| DATABASE_URL | Yes      | PostgreSQL Database URL |
+| JWT_SECRET   | Yes      | Secret key for JWT      |
+| NODE_ENV     | Yes      | Environment Mode        |
+| PORT         | Auto     | Provided by Render      |
+
+---
+
+# RFID Scan Logic
+
+The RFID scan endpoint compares scanned tool IDs with database inventory and categorizes tools into:
+
+* Correct Tools
+* Missing Tools
+* Extra Tools
+
+---
+
+# Validation Rules
+
+## Issue Tool Validation
+
+* Prevents issuing already issued tools
+
+## Return Tool Validation
+
+* Prevents returning non-issued tools
+
+## Authentication Validation
+
+* Protected routes require JWT token
+
+---
+
+# Test Cases
+
+## Issue Same Tool Twice
+
+Response:
+
+```json
+{
+  "message": "Tool is not available"
+}
 ```
 
-## Deploy to Railway
+## Return Non-Issued Tool
 
-### Step 1: Push to GitHub
+Response:
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: RFID Tool Tracking System"
-git remote add origin https://github.com/your-username/rfid-tool-tracker.git
-git push -u origin main
+```json
+{
+  "message": "Tool is not currently issued"
+}
 ```
 
-### Step 2: Deploy on Railway
+## RFID Scan Missing Tools
 
-1. Go to [railway.app](https://railway.app) and create a new project
-2. Click **"Deploy from GitHub repo"** and select your repository
-3. Railway will auto-detect the `railway.json` configuration
-4. Add a **PostgreSQL** service to your project (click "+ New" → "Database" → "PostgreSQL")
-5. Railway auto-sets `DATABASE_URL` — link it to your service
-6. Add environment variables in Railway dashboard:
-   - `JWT_SECRET` = (strong random string)
-   - `NODE_ENV` = `production`
-7. Railway handles `PORT` automatically
-8. Click **Deploy** — Railway will build and start the app
+Returns missing tools inside:
 
-### Step 3: First-time setup
-
-After deployment, the database tables are created automatically via Drizzle schema push on first run.
-Create your first admin user via:
-
-```bash
-curl -X POST https://your-app.railway.app/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "yourpassword"}'
+```json
+missing[]
 ```
 
-## Environment Variables
+---
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `JWT_SECRET` | Yes | Secret key for JWT signing (use a strong random string) |
-| `PORT` | Auto | Port to listen on (Railway sets this) |
-| `NODE_ENV` | Yes | Set to `production` for Railway |
+# Security Features
 
-## Assumptions & Limitations
+* JWT Authentication
+* Password Hashing using bcryptjs
+* Protected API Routes
+* Input Validation
+* Secure Password Storage
 
-- **User IDs in issue/return** are free-form strings (employee IDs like "EMP001") — not linked to registered users
-- **RFID scan simulation**: The scan compares provided tool IDs against all tools in the database (not just available ones)
-- **No role-based access control**: All authenticated users have full access
-- **Password hashing**: bcryptjs with 10 salt rounds
-- **JWT expiry**: 7 days
+---
+
+# Assumptions & Limitations
+
+* RFID scanning is simulated
+* No role-based access control
+* Employee IDs are free-form strings
+* JWT expires in 7 days
+
+---
+
+# Future Improvements
+
+* Real RFID Hardware Integration
+* Role-Based Access Control
+* Email Notifications
+* Advanced Reporting
+* Export Reports (PDF/Excel)
+* Multi-user Access Levels
+
+---
+
+# Author
+
+Ankit Shukla
+
+---
