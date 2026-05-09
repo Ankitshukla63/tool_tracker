@@ -1,8 +1,13 @@
 #!/bin/bash
 # GitHub Push Script for RFID Tool Tracker
-# Run this once from the Replit Shell:  bash push_to_github.sh
+# Usage: GITHUB_TOKEN=your_token bash push_to_github.sh
 
-GITHUB_TOKEN="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"
+if [ -z "$GITHUB_TOKEN" ]; then
+  echo "Error: GITHUB_TOKEN environment variable is required"
+  echo "Usage: GITHUB_TOKEN=your_token bash push_to_github.sh"
+  exit 1
+fi
+
 REPO_URL="https://Ankitshukla63:${GITHUB_TOKEN}@github.com/Ankitshukla63/tool_tracker.git"
 
 echo "Setting up git config..."
