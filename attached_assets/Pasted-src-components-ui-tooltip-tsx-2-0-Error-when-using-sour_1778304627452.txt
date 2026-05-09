@@ -1,0 +1,45 @@
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/dropdown-menu.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/select.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 2156 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/public/index.html                   1.41 kB │ gzip:   0.55 kB
+dist/public/assets/index-DUrmrLMk.css  103.72 kB │ gzip:  16.92 kB
+dist/public/assets/index-DRRNkSqp.js   547.80 kB │ gzip: 166.54 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.65s
+Building API server...
+> @workspace/api-server@0.0.0 build /opt/render/project/src/artifacts/api-server
+> node ./build.mjs
+  dist/index.mjs                       2.3mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.6kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.0mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.9kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+⚡ Done in 517ms
+Build complete!
+==> Uploading build...
+==> Uploaded in 7.7s. Compression took 5.4s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'node --enable-source-maps artifacts/api-server/dist/index.mjs'
+{"level":30,"time":1778304733188,"pid":68,"hostname":"srv-d7vbvj9o3t8c73cp8mng-hibernate-8449586dd9-lczwh","port":10000,"msg":"Server listening"}
+{"level":30,"time":1778304733779,"pid":68,"hostname":"srv-d7vbvj9o3t8c73cp8mng-hibernate-8449586dd9-lczwh","req":{"id":1,"method":"HEAD","url":"/"},"res":{"statusCode":200},"responseTime":5,"msg":"request completed"}
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://tool-tracker-1-lee1.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
