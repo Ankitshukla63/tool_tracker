@@ -4,8 +4,8 @@ services:
     runtime: node
     region: singapore
     plan: free
-    buildCommand: npm install -g pnpm@9 && bash build.sh
-    startCommand: node --enable-source-maps artifacts/api-server/dist/index.mjs
+    buildCommand: "corepack enable pnpm && pnpm install --frozen-lockfile && PORT=3000 BASE_PATH=/ NODE_ENV=production pnpm --filter @workspace/rfid-frontend run build && pnpm --filter @workspace/api-server run build"
+    startCommand: "node --enable-source-maps artifacts/api-server/dist/index.mjs"
     healthCheckPath: /api/healthz
     envVars:
       - key: NODE_ENV
