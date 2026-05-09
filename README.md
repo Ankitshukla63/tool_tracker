@@ -183,31 +183,34 @@ CREATE TABLE transactions (
 ```bash
 tool_tracker/
 │
-├── apps/
-│   ├── api-server/
-│   │   ├── src/
-│   │   ├── routes/
-│   │   ├── middleware/
-│   │   └── package.json
-│   │
-│   └── rfid-frontend/
-│       ├── src/
-│       ├── components/
-│       ├── pages/
-│       └── package.json
+├── artifacts/
+├── attached_assets/
+├── lib/
+├── scripts/
 │
-├── packages/
-│   ├── db/
-│   ├── api-spec/
-│   └── shared/
+├── .env.example
+├── .gitignore
+├── .npmrc
+├── .replit
+├── .replitignore
 │
-├── railway.json
-├── pnpm-workspace.yaml
+├── build.sh
+├── nixpacks.toml
 ├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+│
+├── push_to_github.sh
+├── railway.json
+├── render.yaml
+├── replit.md
+│
+├── tsconfig.base.json
+├── tsconfig.json
+│
 └── README.md
 ```
 
----
 
 # Local Development Setup
 
