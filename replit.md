@@ -1,45 +1,65 @@
-# [Project name]
+# RFID Tool Tracking System
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A full-stack RFID Tool Tracking system for managing industrial tool inventory with JWT authentication.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
+- `pnpm --filter @workspace/rfid-frontend run dev` — run the frontend (port assigned by workflow)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Required env: `DATABASE_URL` — Postgres connection string, `JWT_SECRET` — JWT signing secret
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
+- Frontend: React 19 + Vite + Tailwind CSS + shadcn/ui + wouter
 - API: Express 5
 - DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Auth: JWT (jsonwebtoken) + bcryptjs
+- Validation: Zod (zod/v4), drizzle-zod
+- API codegen: Orval (from OpenAPI spec → React Query hooks + Zod schemas)
+- Build: esbuild (CJS bundle for API), Vite (static for frontend)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — OpenAPI spec (source of truth for all API contracts)
+- `lib/db/src/schema/tools.ts` — DB schema (tools, users, transactions tables)
+- `lib/api-client-react/src/generated/` — generated React Query hooks
+- `lib/api-zod/src/generated/` — generated Zod validation schemas
+- `artifacts/api-server/src/routes/` — Express route handlers
+- `artifacts/api-server/src/lib/auth.ts` — JWT + bcrypt helpers
+- `artifacts/api-server/src/middlewares/auth.ts` — JWT auth middleware
+- `artifacts/rfid-frontend/src/` — React frontend
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Contract-first API: OpenAPI spec → Orval codegen → typed React Query hooks + Zod schemas
+- JWT stored in localStorage on frontend; injected as Bearer token in customFetch
+- Express serves static frontend files in production (NODE_ENV=production)
+- Free-form user IDs for tool issue/return (e.g. "EMP001") — not linked to registered users
+- All DB schema changes go through Drizzle push (dev) or Railway publish flow (prod)
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+RFID Tool Tracking System with: Tool Master CRUD, Issue/Return flow with validation, RFID Scan simulation, Dashboard statistics, and JWT-authenticated API.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Railway + GitHub deployment target
+- Code must be 100% correct and deployable without changes
+- Tech: React + TypeScript (UI), Node.js + Express + TypeScript (Backend), PostgreSQL
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Always run codegen after changing openapi.yaml: `pnpm --filter @workspace/api-spec run codegen`
+- Always run DB push after schema changes: `pnpm --filter @workspace/db run push`
+- JWT_SECRET env var required in production — defaults to a hardcoded key in dev only
+- Frontend uses BASE_PATH from Vite env — handled automatically by the artifact workflow
 
 ## Pointers
 
 - See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- See `README.md` for Railway deployment instructions and API documentation
